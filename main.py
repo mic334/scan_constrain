@@ -17,10 +17,10 @@ atomi_da_congelare_X = [2, 3]  # puoi usare anche range(20,27)
 n_steps = 5            
 ampiezza_passo = 0.05  
 output_folder = "steps"
-
-tempo="24:00:00"
 nproc = 24
+tempo = "24:00:00"
 memoria = "24000MB"
+
 # --- 3. CREAZIONE OGGETTI ---
 lettura = LetturaScrittura(file_xyz)
 work = WorkOnMatrix()
@@ -32,7 +32,30 @@ print(f"--- Distanza iniziale: {dist_iniziale:.4f} Å ---")
 
 os.makedirs(output_folder, exist_ok=True)
 
-# --- 5. LOOP GENERAZIONE STEP ---
+# --- 4b. STEP 0 (punto di partenza) ---
+print(f"Step 0: Distanza iniziale {dist_iniziale:.4f} Å")
+
+step0_dir = os.path.join(output_folder, "0")
+os.makedirs(step0_dir, exist_ok=True)
+
+head = lettura.testa(funzionale="M062x", basis_set="def2svp", carica="1", molteplicità="2")
+com_con_bond = lettura.scrivi_input(head, lettura.matrix, atomo1, atomo2)
+com_finale = lettura.aggiungi_vincoli_coda(com_con_bond, atomi_da_congelare_X)
+
+# Salvataggio file .com per step 0
+com_path = os.path.join(step0_dir, "0.com")
+with open(com_path, "w") as f:
+    f.write(com_finale)
+print(f"File .com salvato in: {com_path}")
+
+# Salvataggio script SLURM per step 0
+slurm_string = lettura.genera_slurm("0.com",nproc,tempo,memoria)
+slurm_path = os.path.join(step0_dir, "0.slurm")
+with open(slurm_path, "w") as f:
+    f.write(slurm_string)
+print(f"File SLURM salvato in: {slurm_path}")
+
+# --- 5. LOOP GENERAZIONE STEP 1..n ---
 for step in range(1, n_steps + 1):
     # Copia della matrice
     nuova_matrice = copy.deepcopy(lettura.matrix)
@@ -67,4 +90,4 @@ for step in range(1, n_steps + 1):
         f.write(slurm_string)
     print(f"File SLURM salvato in: {slurm_path}")
 
-print(" Operazione completata con successo!")
+print(f"\n✅ Operazione completata con successo!")
