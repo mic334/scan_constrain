@@ -3,7 +3,7 @@ import copy
 import sys
 
 # --- 1. CONFIGURAZIONE PATH E IMPORT ---
-sys.path.append("src") 
+sys.path.append("../src") 
 
 from LetturaScrittura import LetturaScrittura
 from WorkOnMatrix import WorkOnMatrix
@@ -85,7 +85,7 @@ for step in range(1, n_steps + 1):
 
     # --- Salvataggio script SLURM ---
     slurm_string = lettura.genera_slurm(f"{step}.com",nproc,tempo,memoria)
-    slurm_path = os.path.join(step_dir, f"{step}.slurm")
+    slurm_path = os.path.join(step_dir, f"{step}.sh")
     with open(slurm_path, "w") as f:
         f.write(slurm_string)
     print(f"File SLURM salvato in: {slurm_path}")
