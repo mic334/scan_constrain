@@ -25,20 +25,20 @@ class WorkOnMatrix:
         return delta
 
     def new_row(self, matrice, distanza, delta, atomo1, atomo2):
+        # Coordinate originali
         x1, y1, z1 = matrice[atomo1][1], matrice[atomo1][2], matrice[atomo1][3]
         x2, y2, z2 = matrice[atomo2][1], matrice[atomo2][2], matrice[atomo2][3]
-        
-        # Vettore unitario (direzione da atomo1 verso atomo2)
-        # Nota: per andare VERSO atomo2, il vettore deve essere (x2-x1)
+
+        # Vettore unitario dalla posizione di atomo1 verso atomo2
         ux = (x2 - x1) / distanza
         uy = (y2 - y1) / distanza
         uz = (z2 - z1) / distanza
-        
-        # Nuovo punto spostato
-        matrice[atomo1][1] = x1 + delta * ux
-        matrice[atomo1][2] = y1 + delta * uy
-        matrice[atomo1][3] = z1 + delta * uz
-        
-        return matrice    
+
+        # Aggiorna solo l'atomo2
+        matrice[atomo2][1] = x2 + delta * ux
+        matrice[atomo2][2] = y2 + delta * uy
+        matrice[atomo2][3] = z2 + delta * uz
+
+        return matrice
 
 
