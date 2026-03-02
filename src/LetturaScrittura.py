@@ -74,7 +74,7 @@ class LetturaScrittura:
         com_pulito = com_string.strip()
 
         # Coordinate + riga vuota + vincoli + riga vuota finale
-        return f"{com_pulito}\n{stringa_vincoli}\n"
+        return f"{com_pulito}\n{stringa_vincoli}\n\n"
 
     def genera_slurm(self, input_file, nproc, tempo, memoria):
 

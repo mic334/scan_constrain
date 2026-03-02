@@ -1,4 +1,4 @@
-#p opt M062x/def2svp
+#p opt M062X/def2svp scrf=(cpcm,solvent=water) empiricaldispersion=GD3
 
 Title Card Required
 
@@ -10,3 +10,4 @@ H  0.000000  -0.755453  -0.471161
 B 1 2 F
 X 3 F
 X 4 F
+
