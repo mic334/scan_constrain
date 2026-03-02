@@ -2,66 +2,69 @@ import os
 import copy
 import sys
 
-# --- Aggiungi la cartella src al path ---
+# --- 1. CONFIGURAZIONE PATH E IMPORT ---
 sys.path.append("src") 
 
 from LetturaScrittura import LetturaScrittura
 from WorkOnMatrix import WorkOnMatrix
 
-if __name__ == "__main__":
-    # --- Parametri iniziali ---
-    file_xyz = "/Users/michele/source_git/mie_repo/pub/scan/data/water.xyz"
-    atomo1 = 0
-    atomo2 = 1
-    n_steps = 10          # Numero di file/step che vuoi generare
-    ampiezza_passo = 0.05  # Ogni step sposta l'atomo di 0.05 Angstrom
-    output_folder = "steps"
+# --- 2. PARAMETRI DI INPUT ---
+file_xyz = "/Users/michele/source_git/mie_repo/pub/scan/data/water.xyz"
+atomo1 = 0  
+atomo2 = 1  
+atomi_da_congelare_X = [2, 3]  # puoi usare anche range(20,27)
 
-    # --- Crea oggetti ---
-    lettura = LetturaScrittura(file_xyz)
-    work = WorkOnMatrix()
+n_steps = 5            
+ampiezza_passo = 0.05  
+output_folder = "steps"
 
-    # --- Controlli di sicurezza ---
-    if not lettura.matrix:
-        raise ValueError("La matrice è vuota!")
-    if atomo1 >= len(lettura.matrix) or atomo2 >= len(lettura.matrix):
-        raise IndexError("Indici atomi fuori range")
+tempo="24:00:00"
+nproc = 24
+memoria = "24000MB"
+# --- 3. CREAZIONE OGGETTI ---
+lettura = LetturaScrittura(file_xyz)
+work = WorkOnMatrix()
 
-    # --- Calcolo Distanza iniziale ---
-    # Ci serve ancora per definire la direzione del movimento in new_row
-    distanza, a1, a2 = work.calc_dist(lettura.matrix, atomo1, atomo2)
+# --- 4. CALCOLO DISTANZA INIZIALE ---
+risultato_dist = work.calc_dist(lettura.matrix, atomo1, atomo2)
+dist_iniziale = risultato_dist[0] 
+print(f"--- Distanza iniziale: {dist_iniziale:.4f} Å ---")
 
-    # --- Calcolo Delta ---
-    # Modificato: ora passiamo l'ampiezza fissa. 
-    # 'delta' qui rappresenterà lo spostamento di un singolo step.
-    delta_unitario = work.passi(n_steps, ampiezza_passo)
+os.makedirs(output_folder, exist_ok=True)
 
-    # --- Header per Gaussian ---
+# --- 5. LOOP GENERAZIONE STEP ---
+for step in range(1, n_steps + 1):
+    # Copia della matrice
+    nuova_matrice = copy.deepcopy(lettura.matrix)
+
+    # Calcolo spostamento
+    spostamento_attuale = ampiezza_passo * step
+    nuova_matrice = work.new_row(nuova_matrice, dist_iniziale, spostamento_attuale, atomo1, atomo2)
+
+    # Verifica distanza per il print
+    nuova_dist = work.calc_dist(nuova_matrice, atomo1, atomo2)[0]
+    print(f"Step {step}: Nuova Distanza {nuova_dist:.4f} Å")
+
+    # --- Costruzione input Gaussian ---
     head = lettura.testa(funzionale="M062x", basis_set="def2svp", carica="1", molteplicità="2")
+    com_con_bond = lettura.scrivi_input(head, nuova_matrice, atomo1, atomo2)
+    com_finale = lettura.aggiungi_vincoli_coda(com_con_bond, atomi_da_congelare_X)
 
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    # --- Creazione cartella step ---
+    step_dir = os.path.join(output_folder, str(step))
+    os.makedirs(step_dir, exist_ok=True)
 
-    # --- Loop sui passi ---
-    for step in range(1, n_steps + 1):
-        # Copia la matrice originale ogni volta per evitare errori cumulativi
-        nuova_matrice = copy.deepcopy(lettura.matrix)
+    # --- Salvataggio file .com ---
+    com_path = os.path.join(step_dir, f"{step}.com")
+    with open(com_path, "w") as f:
+        f.write(com_finale)
+    print(f"File .com salvato in: {com_path}")
 
-        # Calcoliamo lo spostamento totale per questo specifico step
-        # Esempio: step 1 = 0.05, step 2 = 0.10, ecc.
-        spostamento_attuale = delta_unitario * step
+    # --- Salvataggio script SLURM ---
+    slurm_string = lettura.genera_slurm(f"{step}.com",nproc,tempo,memoria)
+    slurm_path = os.path.join(step_dir, f"{step}.slurm")
+    with open(slurm_path, "w") as f:
+        f.write(slurm_string)
+    print(f"File SLURM salvato in: {slurm_path}")
 
-        # Aggiorna posizione dell'atomo1 verso l'atomo2
-        nuova_matrice = work.new_row(nuova_matrice, distanza, spostamento_attuale, atomo1, atomo2)
-
-        # Gestione cartelle e file
-        step_folder = os.path.join(output_folder, str(step))
-        if not os.path.exists(step_folder):
-            os.makedirs(step_folder)
-        com_string = lettura.scrivi_input(head, nuova_matrice)
-        file_path = os.path.join(step_folder, f"{step}.com")
-        
-        with open(file_path, "w") as f:
-            f.write(com_string)
-
-        print(f"Generato step {step}: spostamento totale {spostamento_attuale:.3f} Å → {file_path}")
+print(" Operazione completata con successo!")
