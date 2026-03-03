@@ -18,9 +18,11 @@ class LetturaScrittura:
                 x, y, z = map(float, parts[1:4])
                 self.matrix.append([atomo, x, y, z])
         
-    def testa(self, funzionale, basis_set, carica, molteplicità, solvent=None, dispersion=None):
-    
-        head = f"#p opt {funzionale}/{basis_set}"
+    def testa(self, funzionale, basis_set, carica, molteplicità,nproc,mem,solvent=None, dispersion=None):
+        
+        head = f"%nproc={nproc}"
+        head += f"\n%mem={mem}GB\n"
+        head += f"#p opt(addredundant) {funzionale}/{basis_set}"
     
         if solvent:
             head += f" scrf=(cpcm,solvent={solvent})"

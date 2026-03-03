@@ -44,7 +44,7 @@ print(f"Step 0: Distanza iniziale {dist_iniziale:.4f} Å")
 step0_dir = os.path.join(output_folder, "0")
 os.makedirs(step0_dir, exist_ok=True)
 
-head = lettura.testa(funzionale, basis_set, carica, molteplicità, solvent="water",dispersion="GD3")
+head = lettura.testa(funzionale, basis_set, carica, molteplicità,nproc,memoria[:2],solvent="water",dispersion="GD3")
 com_con_bond = lettura.scrivi_input(head, lettura.matrix, atomo1, atomo2)
 com_finale = lettura.aggiungi_vincoli_coda(com_con_bond, atomi_da_congelare_X)
 
@@ -75,7 +75,7 @@ for step in range(1, n_steps + 1):
     print(f"Step {step}: Nuova Distanza {nuova_dist:.4f} Å")
 
     # --- Costruzione input Gaussian ---
-    head = lettura.testa(funzionale, basis_set, carica, molteplicità, solvent="water",dispersion="GD3")
+    head = lettura.testa(funzionale, basis_set, carica, molteplicità,nproc,memoria[:2],solvent="water",dispersion="GD3")
     com_con_bond = lettura.scrivi_input(head, nuova_matrice, atomo1, atomo2)
     com_finale = lettura.aggiungi_vincoli_coda(com_con_bond, atomi_da_congelare_X)
 
