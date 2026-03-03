@@ -1,4 +1,6 @@
-#p opt M062X/def2svp scrf=(cpcm,solvent=water) empiricaldispersion=GD3
+%nproc=24
+%mem=24GB
+#p opt(addredundant) M062X/def2svp scrf=(cpcm,solvent=water) empiricaldispersion=GD3
 
 Title Card Required
 
