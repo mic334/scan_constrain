@@ -2,11 +2,8 @@ import os
 import copy
 import sys
 
-# --- 1. CONFIGURAZIONE PATH E IMPORT ---
-sys.path.append("../src") 
-
-from LetturaScrittura import LetturaScrittura
-from WorkOnMatrix import WorkOnMatrix
+from models.LetturaScrittura import LetturaScrittura
+from models.WorkOnMatrix import WorkOnMatrix
 
 # --- 2. PARAMETRI DI INPUT ---
 file_xyz = "/Users/michele/source_git/mie_repo/pub/scan/data/water.xyz"
