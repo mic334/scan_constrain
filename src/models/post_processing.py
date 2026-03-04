@@ -19,11 +19,14 @@ df_error_clean.columns = ['step', 'energy']
 
 df_done_clean = df_done_clean.sort_values(by='step', ascending=True )
 df_error_clean = df_error_clean.sort_values(by='step', ascending=True )
+
+df_done_clean['energy in kcal'] = df_done_clean['energy'] * 627.5095
+df_error_clean['energy in kcal'] = df_error_clean['energy'] * 627.5095
 #print(df_done_clean.head(35))
-plt.plot(df_done_clean['step'], df_done_clean['energy'],marker='x', linestyle='-', label='Done', color='blue') 
-plt.plot(df_error_clean['step'], df_error_clean['energy'],marker='o', linestyle='-', label='Error', color='red')
+plt.plot(df_done_clean['step'], df_done_clean['energy in kcal'],marker='x', linestyle='-', label='Done', color='blue') 
+plt.plot(df_error_clean['step'], df_error_clean['energy in kcal'],marker='o', linestyle='-', label='Error', color='red')
 plt.xlabel('Step')
-plt.ylabel('Energy')
+plt.ylabel('Energy (kcal/mol)')
 plt.title('Energy vs Step for Done and Error')
 plt.grid()
 plt.legend()
