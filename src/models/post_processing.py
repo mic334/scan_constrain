@@ -27,6 +27,6 @@ plt.ylabel('Energy')
 plt.title('Energy vs Step for Done and Error')
 plt.grid()
 plt.legend()
-plt.show()
 plt.savefig("data/solvatation_TPrA/steps/energy_vs_step.png", transparent=True, dpi=300, bbox_inches='tight')  # Salva la figura con una risoluzione di 300 dpi
+plt.show()
 plt.close()
