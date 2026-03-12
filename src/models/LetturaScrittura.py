@@ -20,9 +20,9 @@ class LetturaScrittura:
         
     def testa_orca_xtb(self, hamiltonian, carica, molteplicità, nproc, mem, solvent=None, Constraint=None):
         if solvent:
-            head_orca = f"! opt {hamiltonian} alpb(solvent={solvent})\n"
+            head_orca = f"!opt {hamiltonian} alpb(solvent={solvent})\n"
         else:
-            head_orca = f"! opt {hamiltonian}\n"
+            head_orca = f"!opt {hamiltonian}\n"
 
         head_orca += f"%pal nprocs {nproc} end\n"
         head_orca += f"%maxcore {mem * 1000}\n"
@@ -143,9 +143,9 @@ g16 -p="{nproc}" < {input_file} > {base_name}.log
 #SBATCH --job-name=xtb_orca_opt
 
 ml profile/chem-phys
-ml orca/6.0.0--gcc-12.2.0
+ml orca/6.0.0--gcc--12.2.0
 
-export XTBEXE ="$HOME/xtb-6.6.1/bin/xtb"  # Se usi xtb come parte del tuo workflow
+export XTBEXE=$HOME/xtb/xtb-6.6.1/bin/xtb
 export PATH=$(dirname $XTBEXE):$PATH
 
 export OMPI_MCA_opal_wanr_on_missing_libcuda=0

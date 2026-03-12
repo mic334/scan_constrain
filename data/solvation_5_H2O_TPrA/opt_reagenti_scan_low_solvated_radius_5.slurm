@@ -6,12 +6,13 @@
 #SBATCH -p dcgp_usr_prod
 #SBATCH --mem=2000MB
 #SBATCH --time=12:00:00
+#SBATCH --error=opt_reagenti_scan_low_solvated_radius_5.err
 #SBATCH --job-name=xtb_orca_opt
 
 ml profile/chem-phys
-ml orca/6.0.0--gcc-12.2.0
+ml orca/6.0.0--gcc--12.2.0
 
-export XTBEXE ="$HOME/xtb-6.6.1/bin/xtb"  # Se usi xtb come parte del tuo workflow
+export XTBEXE=$HOME/xtb/xtb-6.6.1/bin/xtb
 export PATH=$(dirname $XTBEXE):$PATH
 
 export OMPI_MCA_opal_wanr_on_missing_libcuda=0

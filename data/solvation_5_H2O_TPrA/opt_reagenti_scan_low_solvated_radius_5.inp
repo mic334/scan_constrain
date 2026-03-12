@@ -1,12 +1,12 @@
-! opt GNF2-XTB alpb(solvent=water)
+!opt GFN2-XTB alpb(solvent=water)
 %pal nprocs 8 end
 %maxcore 2000
 %geom Constraints {
-C 0:83 C
+C 0:81 C
 }
  end
  end
-* xyz 2 2
+* xyz 1 2
 N -0.92806 0.01307 -0.08343
 C 0.16453 -0.23408 0.82294
 C 0.28304 0.83814 1.91208

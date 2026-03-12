@@ -25,13 +25,13 @@ ls = LetturaScrittura(new_xyz_path)
 
 # genero il testo dell'input ORCA
 orca_input = ls.testa_orca_xtb(
-    hamiltonian="GNF2-XTB",
-    carica=2,
+    hamiltonian="GFN2-XTB",
+    carica=1,
     molteplicità=2,
     nproc=8,
     mem=2,
     solvent="water",
-    Constraint='C 0:83 C'
+    Constraint='C 0:81 C'
 )
 
 # nome del nuovo file ORCA
