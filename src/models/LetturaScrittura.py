@@ -28,7 +28,7 @@ class LetturaScrittura:
         head_orca += f"%maxcore {mem * 1000}\n"
 
         if Constraint:
-            head_orca += f"%geom Constraints {{\n{Constraint}\n}}\n"
+            head_orca += f"%geom Constraints {{\n{Constraint}\n}}\n end\n end"
 
         head_orca += f"\n* xyz {carica} {molteplicità}\n"
 
@@ -125,7 +125,7 @@ module load g16/c02
 export GAUSS_SCRDIR=$CINECA_SCRATCH/g16_$SLURM_JOBID
 mkdir -p $GAUSS_SCRDIR
 
-g16 < {input_file} > {base_name}.log
+g16 -p="{nproc}" < {input_file} > {base_name}.log
 """
 
         elif programma.lower() == "orca":
@@ -139,8 +139,8 @@ g16 < {input_file} > {base_name}.log
 #SBATCH -p dcgp_usr_prod
 #SBATCH --mem={memoria*1000}MB
 #SBATCH --time={tempo}
-#SBATCH --error={base_name}.err
-#SBATCH --job-name={base_name}
+#SBATCH --error={os.path.splitext(os.path.basename(input_file))[0]}.err
+#SBATCH --job-name=xtb_orca_opt
 
 ml profile/chem-phys
 ml orca/6.0.0--gcc-12.2.0
@@ -150,6 +150,6 @@ export PATH=$(dirname $XTBEXE):$PATH
 
 export OMPI_MCA_opal_wanr_on_missing_libcuda=0
 
-$ORCA_HOME/bin/orca {input_file} > {base_name}.out
+$ORCA_HOME/bin/orca {os.path.basename(input_file)} > {os.path.splitext(os.path.basename(input_file))[0]}.out
 """
         return script

@@ -1,14 +1,15 @@
 import os
 import copy
 import sys
-import numpy as np
 
 from models.HydraConvexHull import HydraConvexHull
 from models.LetturaScrittura import LetturaScrittura
 
-original_xyz_path = "/Users/michele/source_git/mie_repo/pub/hydor_QM_MM/data/solvation_5_H2O_TPrA/opt_reagenti_scan_low.xyz"
+original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/data/solvation_5_H2O_TPrA/opt_reagenti_scan_low.xyz"
 radius = 5
 nO = int(radius * 3)
+print(original_xyz_path)
+print(os.path.exists(original_xyz_path))
 
 # creo oggetto HydraConvexHull
 hch = HydraConvexHull()
@@ -25,12 +26,12 @@ ls = LetturaScrittura(new_xyz_path)
 # genero il testo dell'input ORCA
 orca_input = ls.testa_orca_xtb(
     hamiltonian="GNF2-XTB",
-    carica=0,
-    molteplicità=1,
-    nproc=4,
+    carica=2,
+    molteplicità=2,
+    nproc=8,
     mem=2,
     solvent="water",
-    Constraint=None
+    Constraint='C 0:83 C'
 )
 
 # nome del nuovo file ORCA
@@ -42,3 +43,20 @@ with open(orca_file_path, "w") as f:
 
 print(f"New ORCA input created at {orca_file_path}")
 
+programma = "orca"
+input_file = orca_file_path
+nproc = 8
+tempo = "12:00:00"
+memoria = 2
+
+slurm_script = ls.genera_slurm(programma, input_file, nproc, tempo, memoria)
+
+cartella = os.path.dirname(input_file)
+base = os.path.splitext(os.path.basename(input_file))[0]
+nome_file = os.path.join(cartella, base + ".slurm")
+
+with open(nome_file, "w") as f:
+    f.write(slurm_script)
+
+
+print(f"File SLURM creato: {nome_file}")

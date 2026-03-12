@@ -186,7 +186,7 @@ class HydraConvexHull:
             new_file.write("Molecule with added oxygen and hydrogen atoms\n")
 
             for line in original_lines[2:]:
-                new_file.write(line)
+                new_file.write(line.rstrip('\n') + '\n')
 
             for oxygen in oxygen_atoms:
                 new_file.write(f"O {oxygen[0]} {oxygen[1]} {oxygen[2]}\n")
