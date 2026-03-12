@@ -9,4 +9,4 @@
 *err
 *charges
 *carthess
-*__pycache__
+__pycache__/
