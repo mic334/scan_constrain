@@ -20,7 +20,7 @@ class LetturaScrittura:
         
     def testa_orca_xtb(self, hamiltonian, carica, molteplicità, nproc, mem, solvent=None, Constraint=None):
         if solvent:
-            head_orca = f"!opt {hamiltonian} alpb(solvent={solvent})\n"
+            head_orca = f"!opt {hamiltonian} alpb({solvent})\n"
         else:
             head_orca = f"!opt {hamiltonian}\n"
 
