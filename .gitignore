@@ -26,3 +26,10 @@ __pycache__/
 
 # out file
 *out
+
+#cartelal trash 
+test/99.trash
+data/solvation_5H2O_TPrA/99.trash
+
+#vecchi in models cartelal old
+src/models/old

@@ -2,21 +2,36 @@ import os
 import copy
 import sys
 
-from models.HydraConvexHull import HydraConvexHull
+from models.WaterShellGenerator import WaterShellGenerator
 from models.LetturaScrittura import LetturaScrittura
 
 #dichiariazioen variabile
-original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/test/opt_reagenti_scan_low.xyz"
+original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/test/1.new_hull/opt_reagenti_scan_low.xyz"
 radius = 5
 nO = int(radius * 3)
 print(original_xyz_path)
 print(os.path.exists(original_xyz_path))
 
-# creo oggetto HydraConvexHull
-hch = HydraConvexHull()
 
-new_xyz_path = hch.generate_new_file_path(original_xyz_path, radius)
-hch.create_modified_xyz(original_xyz_path, new_xyz_path, radius, nO)
+# creo oggetto WaterShellGenerator
+wsg = WaterShellGenerator(
+    xyz_file_path=original_xyz_path,
+    solvent_distance=radius,
+    waters_per_distance=3
+)
+
+# se vuoi conoscere il numero di acque stimato
+nO = wsg.estimate_number_of_waters()
+
+# genera automaticamente il nome del nuovo file
+new_xyz_path = wsg.generate_new_file_path()
+
+# crea il nuovo xyz
+wsg.create_modified_xyz(new_xyz_path)
+
+print("Number of waters added =", nO)
+print(f"New XYZ file created at {new_xyz_path} with additional oxygen and hydrogen atoms.")
+
 
 print("Number of waters added =", nO)
 print(f"New XYZ file created at {new_xyz_path} with additional oxygen and hydrogen atoms.")
