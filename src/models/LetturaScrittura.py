@@ -59,7 +59,7 @@ class LetturaScrittura:
     
         return head 
 
-    def scrivi_input(self, head, matrice, atomo1=None, atomo2=None):
+    def scrivi_input(self, head, matrice, atomo1, atomo2):
     
         righe_xyz = []
 

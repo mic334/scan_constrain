@@ -6,7 +6,8 @@ from models.WaterShellGenerator import WaterShellGenerator
 from models.LetturaScrittura import LetturaScrittura
 
 #dichiariazioen variabile
-original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/data/prodotti/2.MM+QM_fix_5H2O_15H2O_30H2O/prodotti_opt_IRC_low_solvated_radius_5.xyz"
+original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/data/prodotti/3.MM+QM_fix_5H2O_fix_15H2O_30H2O/prodotti_opt_IRC_low_solvated_radius_5.xyz"
+# raggio
 radius = 10
 nO = int(radius * 3)
 print(original_xyz_path)
