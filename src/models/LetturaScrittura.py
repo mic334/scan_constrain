@@ -3,13 +3,14 @@ import os
 class LetturaScrittura:
     def __init__(self, file_name):
         self.matrix = []  # attributo accessibile dall’esterno
+        self.nato = 0 
         self.leggi(file_name)
 
     def leggi(self, file_name):
         """Legge un file XYZ e salva i dati in self.matrix"""
         with open(file_name, 'r') as f:
             lines = f.readlines()
-        
+            self.nato = int(lines[0].strip())  # prima riga: numero di atomi
         # Salta le prime due righe (numero atomi + commento)
         for line in lines[2:]:
             parts = line.strip().split()
@@ -58,7 +59,7 @@ class LetturaScrittura:
     
         return head 
 
-    def scrivi_input(self, head, matrice, atomo1, atomo2):
+    def scrivi_input(self, head, matrice, atomo1=None, atomo2=None):
     
         righe_xyz = []
 
@@ -137,7 +138,7 @@ g16 -p="{nproc}" < {input_file} > {base_name}.log
 #SBATCH --cpus-per-task=1
 #SBATCH --account=CNHPC_1700031_0
 #SBATCH -p dcgp_usr_prod
-#SBATCH --mem={memoria*1000}MB
+#SBATCH --mem={memoria*nproc*1000}MB
 #SBATCH --time={tempo}
 #SBATCH --error={os.path.splitext(os.path.basename(input_file))[0]}.err
 #SBATCH --job-name=xtb_orca_opt
