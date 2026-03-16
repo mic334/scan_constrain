@@ -29,7 +29,11 @@ __pycache__/
 
 #cartelal trash 
 test/99.trash
+<<<<<<< HEAD
 data/solvation_5_H2O_TPrA/99.trash
+=======
+data/solvation_5_H2O_TPrA/99.trash/
+>>>>>>> 38b3744 (spero)
 
 #vecchi in models cartelal old
 src/models/old
