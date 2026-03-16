@@ -2,7 +2,7 @@
 *trj*
 *bibtex
 *opt
-*txt    
+*txt
 *gbw
 *engrad
 *tmp
@@ -10,12 +10,19 @@
 *err
 *charges
 *carthess
+
 # Python cache
 __pycache__/
 *.py[cod]
+
 # Jupyter Notebook checkpoints
-.ipynb_checkpoints/ 
+.ipynb_checkpoints/
+
 # Virtual environment
 .venv/
+
 # macOS
 .DS_Store
+
+# out file
+*out

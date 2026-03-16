@@ -5,8 +5,9 @@ import sys
 from models.HydraConvexHull import HydraConvexHull
 from models.LetturaScrittura import LetturaScrittura
 
-original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/data/solvation_5_H2O_TPrA/2.MM_fix_TPrA_prodotti/2.secondo_xtb/prodotti_opt_IRC_low_solvated_radius_5.xyz"
-radius = 10
+#dichiariazioen variabile
+original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/test/opt_reagenti_scan_low.xyz"
+radius = 5
 nO = int(radius * 3)
 print(original_xyz_path)
 print(os.path.exists(original_xyz_path))
