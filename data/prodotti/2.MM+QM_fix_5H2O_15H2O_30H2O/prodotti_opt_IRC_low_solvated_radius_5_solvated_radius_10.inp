@@ -2,7 +2,7 @@
 %pal nprocs 8 end
 %maxcore 2000
 %geom Constraints {
-C 0:81 C
+C 0:45 C
 }
  end
  end

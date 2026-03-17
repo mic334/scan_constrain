@@ -1,4 +1,6 @@
-import os 
+import os
+
+from httpx import head 
 
 class LetturaScrittura:
     def __init__(self, file_name):
@@ -41,12 +43,15 @@ class LetturaScrittura:
         return head_orca
     
 
-    def testa(self, funzionale, basis_set, carica, molteplicità,nproc,mem,solvent=None, dispersion=None):
+    def testa(self, funzionale, basis_set, carica, molteplicità,nproc,mem,solvent=None, dispersion=None,addredundant=None):
         
         head = f"%nproc={nproc}"
         head += f"\n%mem={mem}GB\n"
-        head += f"#p opt(addredundant) {funzionale}/{basis_set}"
-    
+        if addredundant:
+            head += "\n%opt=addredundant\n"
+        else:
+            head += "#p opt"
+
         if solvent:
             head += f" scrf=(cpcm,solvent={solvent})"
         
@@ -59,52 +64,42 @@ class LetturaScrittura:
     
         return head 
 
-    def scrivi_input(self, head, matrice, atomo1, atomo2):
+    def scrivi_input(self, head, matrice, atomo1, atomo2, vincolo_bond=False): 
     
         righe_xyz = []
 
-        # 1. Coordinate pulite (standard XYZ)
         for atomo in matrice:
             simbolo, x, y, z = atomo[0], atomo[1], atomo[2], atomo[3]
             righe_xyz.append(f"{simbolo}  {x:.6f}  {y:.6f}  {z:.6f}")
 
         xyz = "\n".join(righe_xyz)
 
-        # 2. Vincolo di LEGAME (B = Bond, F = Freeze)
-        # Ricorda: Gaussian conta gli atomi partendo da 1, non da 0
-        coda_vincoli = f"B {atomo1 + 1} {atomo2 + 1} F"
+        if vincolo_bond:
+            coda_vincoli = f"B {atomo1 + 1} {atomo2 + 1} F\n"
+        else:
+            coda_vincoli = ""
 
-        # 3. Composizione finale
-        # Nota: Gaussian esige una riga vuota dopo le coordinate 
-        # e una riga vuota dopo i vincoli per chiudere il file.
-        com = f"{head}{xyz}\n\n{coda_vincoli}\n\n"
+        com = f"{head}{xyz}\n\n{coda_vincoli}"
         return com
-    
-    def aggiungi_vincoli_coda(self, com_string, target_atomi):
-        # target_atomi: iterabile di indici Python (0-based)
-        #           es: [2,3] oppure range(20,27)
 
-        # Se è un singolo int lo trasformo in lista
+    def aggiungi_vincoli_coda(self, com_string, target_atomi):
         if isinstance(target_atomi, int):
             target_atomi = [target_atomi]
 
         nuove_righe = []
-
-        # Gaussian conta da 1
         for idx in target_atomi:
             nuove_righe.append(f"X {idx + 1} F")
 
         stringa_vincoli = "\n".join(nuove_righe)
 
-        com_pulito = com_string.strip()
+        return f"{com_string}{stringa_vincoli}\n\n"    
+    
 
-        # Coordinate + riga vuota + vincoli + riga vuota finale
-        return f"{com_pulito}\n{stringa_vincoli}\n\n"
-
-    def genera_slurm(self, programma,input_file, nproc, tempo, memoria):
+    def genera_slurm(self, programma, input_file, nproc, tempo, memoria):
 
         if programma.lower() == "gaussian":
-            base_name = os.path.splitext(input_file)[0]
+            input_name = os.path.basename(input_file)
+            base_name = os.path.splitext(input_name)[0]
 
             script = f"""#!/bin/bash
 
@@ -126,11 +121,12 @@ module load g16/c02
 export GAUSS_SCRDIR=$CINECA_SCRATCH/g16_$SLURM_JOBID
 mkdir -p $GAUSS_SCRDIR
 
-g16 -p="{nproc}" < {input_file} > {base_name}.log
+g16 -p="{nproc}" < {input_name} > {base_name}.log
 """
 
         elif programma.lower() == "orca":
-            base_name = os.path.splitext(input_file)[0]
+            input_name = os.path.basename(input_file)
+            base_name = os.path.splitext(input_name)[0]
 
             script = f"""#!/bin/bash
 #SBATCH --nodes=1
@@ -140,7 +136,7 @@ g16 -p="{nproc}" < {input_file} > {base_name}.log
 #SBATCH -p dcgp_usr_prod
 #SBATCH --mem={memoria*nproc*1000}MB
 #SBATCH --time={tempo}
-#SBATCH --error={os.path.splitext(os.path.basename(input_file))[0]}.err
+#SBATCH --error={base_name}.err
 #SBATCH --job-name=xtb_orca_opt
 
 ml profile/chem-phys
@@ -151,6 +147,6 @@ export PATH=$(dirname $XTBEXE):$PATH
 
 export OMPI_MCA_opal_wanr_on_missing_libcuda=0
 
-$ORCA_HOME/bin/orca {os.path.basename(input_file)} > {os.path.splitext(os.path.basename(input_file))[0]}.out
+$ORCA_HOME/bin/orca {input_name} > {base_name}.out
 """
         return script
