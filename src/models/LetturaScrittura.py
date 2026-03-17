@@ -57,8 +57,8 @@ class LetturaScrittura:
         
         if dispersion:
             head += f" empiricaldispersion={dispersion}"
-    
-        head += "\n\n"
+        head += f"\n{funzionale}/{basis_set}\n"    
+        head += "\n"
         head += "Title Card Required\n\n"
         head += f"{carica} {molteplicità}\n"
     
