@@ -50,7 +50,7 @@ class LetturaScrittura:
         if addredundant:
             head += "\n%opt=addredundant\n"
         else:
-            head += "#p opt"
+            head += "#p opt=addredundant"
 
         if solvent:
             head += f" scrf=(cpcm,solvent={solvent})"

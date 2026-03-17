@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH -N1 -n1 -c12
+#SBATCH -N1 -n1 -c24
 #SBATCH --time=12:00:00
-#SBATCH --mem=12GB
+#SBATCH --mem=24GB
 #SBATCH --error %J.err
 #SBATCH --output %J.out
 #SBATCH --account=CNHPC_1700031_0
@@ -18,4 +18,4 @@ module load g16/c02
 export GAUSS_SCRDIR=$CINECA_SCRATCH/g16_$SLURM_JOBID
 mkdir -p $GAUSS_SCRDIR
 
-g16 -p="12" < pre_opt.com > pre_opt.log
+g16 -p="24" < pre_opt.com > pre_opt.log
