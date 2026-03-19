@@ -6,9 +6,8 @@ from models.WaterShellGenerator import WaterShellGenerator
 from models.LetturaScrittura import LetturaScrittura
 
 #dichiariazioen variabile
-original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/data/prodotti/3.MM+QM_fix_5H2O_fix_15H2O_30H2O/prodotti_opt_IRC_low_solvated_radius_5.xyz"
-# raggio
-radius = 10
+original_xyz_path = "/Users/michele/source_git/mie_repo/pub/scan/data/reagenti/5.MM+QM_fix_5H2O_fix_10H2O_15H2O/0.geo/opt_reagenti_scan_low_solvated_radius_5.xyz"
+radius = 5
 nO = int(radius * 3)
 print(original_xyz_path)
 print(os.path.exists(original_xyz_path))
@@ -18,7 +17,7 @@ print(os.path.exists(original_xyz_path))
 wsg = WaterShellGenerator(
     xyz_file_path=original_xyz_path,
     solvent_distance=radius,
-    waters_per_distance=3
+    waters_per_distance=nO/radius
 )
 
 # se vuoi conoscere il numero di acque stimato
@@ -48,7 +47,7 @@ orca_input = ls.testa_orca_xtb(
     nproc=8,
     mem=2,
     solvent="water",
-    Constraint='C 0:81 C'
+    Constraint='C 0:75 C'
 )
 
 # nome del nuovo file ORCA

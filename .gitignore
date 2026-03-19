@@ -31,3 +31,9 @@ __pycache__/
 test/99.trash
 #vecchi in models cartelal old
 src/models/old
+
+#log files grandi
+*log
+
+#chk files 
+*chk
