@@ -5,7 +5,7 @@ from httpx import head
 class LetturaScrittura:
     def __init__(self, file_name):
         self.matrix = []  # attributo accessibile dall’esterno
-        self.nato = 0 
+        self.nato = 0  # numero di atomi, inizializzato a 0 accessibile dall’esterno
         self.leggi(file_name)
 
     def leggi(self, file_name):
@@ -45,7 +45,8 @@ class LetturaScrittura:
 
     def testa(self, funzionale, basis_set, carica, molteplicità,nproc,mem,solvent=None, dispersion=None,addredundant=None):
         
-        head = f"%nproc={nproc}"
+        head = "%chk=file.chk\n"
+        head += f"%nproc={nproc}"
         head += f"\n%mem={mem}GB\n"
         if addredundant:
             head += "\n%opt=addredundant\n"

@@ -9,14 +9,14 @@ from models.LetturaScrittura import LetturaScrittura
 
 programma = "gaussian"  # o "orca" a seconda del software che vuoi usare
 pre_opt_folder = "pre_opt_dft"
-file_xyz = "/Users/michele/source_git/mie_repo/pub/scan/data/prodotti/3.MM+QM_fix_5H2O_fix_15H2O_30H2O/prodotti_opt_IRC_low_solvated_radius_5_solvated_radius_10.xyz"
+file_xyz = "/Users/michele/source_git/mie_repo/pub/scan/data/prodotti/5.MM+QM_fix_5H2O_fix_10H2O_15H2O/prodotti_opt_IRC_low_solvated_radius_5_solvated_radius_5.xyz"
 funzionale = "M062X"
 basis_set = "def2svp"
 carica = 1
 molteplicità = 2
 nproc = 24
 memoria = "24GB"
-tempo = "12:00:00"
+tempo = "24:00:00"
 os.makedirs(pre_opt_folder, exist_ok=True)
 
 # Usa direttamente pre_opt_folder
