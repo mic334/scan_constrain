@@ -33,7 +33,6 @@ test/99.trash
 src/models/old
 
 #log files grandi
-*log
 
 #chk files 
 *chk
