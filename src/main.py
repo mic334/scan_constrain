@@ -5,18 +5,21 @@ import sys
 from models.LetturaScrittura import LetturaScrittura
 from models.WorkOnMatrix import WorkOnMatrix
 
+
+#parametri programma
+programma = "gaussian"
 # --- 2. PARAMETRI DI INPUT ---
-file_xyz = "/Users/michele/source_git/mie_repo/pub/scan/data/water.xyz"
-atomo1 = 0  
-atomo2 = 1  
-atomi_da_congelare_X = [2, 3] 
+file_xyz = "/Users/michele/source_git/mie_repo/pub/scan/data/reagenti/5.MM+QM_fix_5H2O_fix_10H2O_15H2O/pre_opt_dft/struttura.xyz"
+atomo1 = 32  
+atomo2 = 4  
+atomi_da_congelare_X = range(47,121) 
 # puoi usare anche range(20,27) ricora che in questo caso i numeri saranno da 20 a 26 poi gli sommi piu uno quindi i numeri partono da 20 e arrivano a 27, morale della favola range(atomo iniziale -1, atomo_finale)
 
-n_steps = 5            
+n_steps = 30            
 ampiezza_passo = -0.05  
 output_folder = "steps"
 nproc = 24
-tempo = "24:00:00"
+tempo = "12:00:00"
 memoria = "24000MB"
 
 funzionale = "M062X"
@@ -52,7 +55,7 @@ with open(com_path, "w") as f:
 print(f"File .com salvato in: {com_path}")
 
 # Salvataggio script SLURM per step 0
-slurm_string = lettura.genera_slurm("0.com",nproc,tempo,memoria)
+slurm_string = lettura.genera_slurm(programma,"0.com",nproc,tempo,memoria)
 slurm_path = os.path.join(step0_dir, "0.sh")
 with open(slurm_path, "w") as f:
     f.write(slurm_string)
@@ -87,7 +90,7 @@ for step in range(1, n_steps + 1):
     print(f"File .com salvato in: {com_path}")
 
     # --- Salvataggio script SLURM ---
-    slurm_string = lettura.genera_slurm(f"{step}.com",nproc,tempo,memoria)
+    slurm_string = lettura.genera_slurm(programma, f"{step}.com", nproc, tempo, memoria)
     slurm_path = os.path.join(step_dir, f"{step}.sh")
     with open(slurm_path, "w") as f:
         f.write(slurm_string)
